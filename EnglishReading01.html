@@ -1,0 +1,610 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KTV Reading Practice</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172033;
+      --muted: #566174;
+      --panel: #fffefa;
+      --paper: #ffffff;
+      --line: #d7e0ec;
+      --active: #e94d3c;
+      --active-bg: #fff2c8;
+      --done: #087f68;
+      --button: #2563eb;
+      --button-dark: #46576d;
+      --focus: #f7c948;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #e9f7ff 0%, #fff8dc 55%, #ffe9e2 100%);
+      color: var(--ink);
+      font-family: "Segoe UI", "Microsoft JhengHei", Arial, sans-serif;
+    }
+
+    main {
+      width: min(1180px, calc(100vw - 28px));
+      min-height: min(740px, calc(100vh - 28px));
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 16px;
+      padding: 20px;
+      border: 2px solid rgba(23, 32, 51, 0.08);
+      border-radius: 18px;
+      background: rgba(255, 254, 250, 0.94);
+      box-shadow: 0 24px 70px rgba(52, 64, 84, 0.18);
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      border-bottom: 2px solid var(--line);
+      padding-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(27px, 3.5vw, 46px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .top-controls {
+      display: flex;
+      align-items: end;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .top-controls label {
+      width: 120px;
+    }
+
+    .settings {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(130px, 1fr));
+      gap: 10px;
+      align-items: end;
+    }
+
+    label {
+      display: grid;
+      gap: 4px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    select,
+    input,
+    textarea {
+      width: 100%;
+      min-height: 40px;
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      padding: 7px 10px;
+      background: var(--paper);
+      color: var(--ink);
+      font: inherit;
+      font-weight: 700;
+    }
+
+    input[type="range"] {
+      padding: 0;
+      accent-color: var(--button);
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    button {
+      min-height: 44px;
+      border: 0;
+      border-radius: 8px;
+      padding: 0 18px;
+      background: var(--button);
+      color: white;
+      font-size: 18px;
+      font-weight: 850;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    button.secondary {
+      background: var(--button-dark);
+    }
+
+    button:disabled {
+      cursor: wait;
+      opacity: 0.62;
+    }
+
+    .editor {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    textarea {
+      min-height: 96px;
+      resize: vertical;
+      line-height: 1.35;
+      font-size: 16px;
+      font-weight: 650;
+    }
+
+    .screen {
+      display: grid;
+      gap: 13px;
+      align-content: center;
+    }
+
+    .line {
+      padding: 12px 16px;
+      border: 2px solid var(--line);
+      border-radius: 10px;
+      background: var(--paper);
+      transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
+    }
+
+    .line.current {
+      border-color: var(--active);
+      background: var(--active-bg);
+      transform: translateY(-2px);
+    }
+
+    .english {
+      min-height: 48px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      column-gap: clamp(12px, 2.5vw, 28px);
+      row-gap: 8px;
+      font-size: clamp(24px, 4vw, 48px);
+      line-height: 1.14;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+    }
+
+    .token {
+      display: inline-block;
+      color: var(--ink);
+      transition: color 120ms ease, transform 120ms ease, background 120ms ease;
+    }
+
+    .token.punctuation {
+      margin-left: clamp(4px, 0.9vw, 10px);
+      margin-right: clamp(8px, 1.4vw, 16px);
+      color: #7c8799;
+    }
+
+    .token.done {
+      color: var(--done);
+    }
+
+    .token.active {
+      color: var(--active);
+      transform: scale(1.1);
+      text-shadow: 0 2px 0 rgba(255, 255, 255, 0.8);
+    }
+
+    .token.punctuation.active {
+      color: #ba3b2f;
+    }
+
+    .chinese {
+      margin-top: 8px;
+      min-height: 28px;
+      color: var(--muted);
+      font-size: clamp(18px, 2.3vw, 28px);
+      line-height: 1.25;
+      font-weight: 800;
+    }
+
+    .progress {
+      height: 12px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #dce5f3;
+    }
+
+    .bar {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #087f68, #e94d3c);
+      transition: width 160ms linear;
+    }
+
+    footer {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      color: var(--muted);
+      font-size: 16px;
+      font-weight: 750;
+      border-top: 2px solid var(--line);
+      padding-top: 14px;
+    }
+
+    .bottom-tools {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .status-row {
+      display: grid;
+      grid-template-columns: 1fr minmax(240px, 420px);
+      align-items: center;
+      gap: 14px;
+    }
+
+    @media (max-width: 980px) {
+      header {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .settings {
+        grid-template-columns: repeat(2, minmax(130px, 1fr));
+      }
+
+      .top-controls,
+      .buttons {
+        justify-content: stretch;
+      }
+
+      button {
+        flex: 1;
+      }
+    }
+
+    @media (max-width: 720px) {
+      main {
+        width: min(100vw - 16px, 1180px);
+        min-height: calc(100vh - 16px);
+        padding: 12px;
+      }
+
+      .editor {
+        grid-template-columns: 1fr;
+      }
+
+      .settings {
+        grid-template-columns: 1fr;
+      }
+
+      .status-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>English Reading</h1>
+      <div class="top-controls">
+        <label>
+          播放次數
+          <input id="repeatCount" type="number" min="1" max="20" value="1">
+        </label>
+        <div class="buttons">
+          <button id="play">播放朗讀</button>
+          <button id="stop" class="secondary">停止朗讀</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="screen" id="screen" aria-live="polite"></section>
+
+    <footer>
+      <div class="bottom-tools">
+        <div class="settings">
+          <label>
+            語速 <span id="rateValue">0.75</span>
+            <input id="rate" type="range" min="0.45" max="1.2" step="0.05" value="0.75">
+          </label>
+          <label>
+            音調 <span id="pitchValue">1.05</span>
+            <input id="pitch" type="range" min="0.65" max="1.6" step="0.05" value="1.05">
+          </label>
+          <label>
+            可用語音
+            <select id="voiceList">
+              <option value="">自動選擇自然聲音</option>
+            </select>
+          </label>
+        </div>
+
+        <section class="editor">
+          <label>
+            英文句子，一行一句
+            <textarea id="englishInput">I love nuts, nuts, nuts.
+I love oranges, oranges, oranges.
+I love papayas, papayas, papayas.
+They are yummy, yummy, yummy.</textarea>
+          </label>
+          <label>
+            中文解釋，一行一句
+            <textarea id="chineseInput">我喜歡堅果、堅果、堅果。
+我喜歡柳橙、柳橙、柳橙。
+我喜歡木瓜、木瓜、木瓜。
+它們很好吃、很好吃、很好吃。</textarea>
+          </label>
+        </section>
+
+        <div class="status-row">
+          <span id="status">選擇聲音、語速與音調後，按播放開始。</span>
+          <div class="progress" aria-hidden="true">
+            <div class="bar" id="bar"></div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    const screen = document.querySelector("#screen");
+    const playButton = document.querySelector("#play");
+    const stopButton = document.querySelector("#stop");
+    const statusText = document.querySelector("#status");
+    const bar = document.querySelector("#bar");
+    const voiceList = document.querySelector("#voiceList");
+    const repeatCount = document.querySelector("#repeatCount");
+    const rate = document.querySelector("#rate");
+    const pitch = document.querySelector("#pitch");
+    const rateValue = document.querySelector("#rateValue");
+    const pitchValue = document.querySelector("#pitchValue");
+    const englishInput = document.querySelector("#englishInput");
+    const chineseInput = document.querySelector("#chineseInput");
+
+    let stopped = false;
+    let activeTimers = [];
+    let voices = [];
+
+    function sanitize(text) {
+      return text.replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[char]));
+    }
+
+    function getLines() {
+      const english = englishInput.value.split(/\n+/).map((line) => line.trim()).filter(Boolean);
+      const chinese = chineseInput.value.split(/\n+/).map((line) => line.trim());
+      return english.slice(0, 4).map((line, index) => ({
+        english: line,
+        chinese: chinese[index] || ""
+      }));
+    }
+
+    function tokenize(text) {
+      return text.match(/[A-Za-z]+(?:'[A-Za-z]+)?|[0-9]+|[.,!?;:]/g) || [];
+    }
+
+    function render() {
+      const lines = getLines();
+      screen.innerHTML = lines.map((line, lineIndex) => {
+        const tokens = tokenize(line.english).map((token, tokenIndex) => {
+          const isPunctuation = /^[.,!?;:]$/.test(token);
+          return `<span class="token ${isPunctuation ? "punctuation" : "word"}" data-line="${lineIndex}" data-token="${tokenIndex}">${sanitize(token)}</span>`;
+        }).join("");
+
+        return `
+          <article class="line" data-line="${lineIndex}">
+            <div class="english">${tokens}</div>
+            <div class="chinese">${sanitize(line.chinese)}</div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function wait(ms) {
+      return new Promise((resolve) => {
+        const timer = setTimeout(resolve, ms);
+        activeTimers.push(timer);
+      });
+    }
+
+    function clearTimers() {
+      activeTimers.forEach(clearTimeout);
+      activeTimers = [];
+    }
+
+    function resetVisuals() {
+      document.querySelectorAll(".line").forEach((el) => el.classList.remove("current"));
+      document.querySelectorAll(".token").forEach((el) => {
+        el.classList.remove("active");
+        el.classList.remove("done");
+      });
+      bar.style.width = "0%";
+    }
+
+    function refreshSliderLabels() {
+      rateValue.textContent = Number(rate.value).toFixed(2);
+      pitchValue.textContent = Number(pitch.value).toFixed(2);
+    }
+
+    function loadVoices() {
+      if (!("speechSynthesis" in window)) {
+        return;
+      }
+
+      voices = speechSynthesis.getVoices()
+        .sort((a, b) => {
+          const aEnglish = /^en[-_]/i.test(a.lang);
+          const bEnglish = /^en[-_]/i.test(b.lang);
+          return Number(bEnglish) - Number(aEnglish)
+            || Number(b.localService) - Number(a.localService)
+            || a.name.localeCompare(b.name);
+        });
+
+      const current = voiceList.value;
+      voiceList.innerHTML = '<option value="">自動選擇可用語音</option>';
+      voices.forEach((voice, index) => {
+        const option = document.createElement("option");
+        option.value = String(index);
+        option.textContent = `${voice.name} (${voice.lang})`;
+        voiceList.appendChild(option);
+      });
+      voiceList.value = current;
+    }
+
+    function chooseVoice() {
+      const chosenIndex = Number(voiceList.value);
+      if (Number.isInteger(chosenIndex) && voices[chosenIndex]) {
+        return voices[chosenIndex];
+      }
+
+      const naturalHints = ["natural", "neural", "online", "google", "microsoft", "premium"];
+      const englishVoices = voices.filter((voice) => /^en[-_]/i.test(voice.lang));
+      const naturalEnglishVoice = englishVoices.find((voice) => {
+        const name = voice.name.toLowerCase();
+        return naturalHints.some((hint) => name.includes(hint));
+      });
+      const naturalVoice = voices.find((voice) => {
+        const name = voice.name.toLowerCase();
+        return naturalHints.some((hint) => name.includes(hint));
+      });
+
+      return naturalEnglishVoice || englishVoices[0] || naturalVoice || voices[0] || null;
+    }
+
+    function speak(text) {
+      return new Promise((resolve) => {
+        if (!("speechSynthesis" in window)) {
+          resolve();
+          return;
+        }
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        const selectedVoice = chooseVoice();
+        utterance.lang = "en-US";
+        utterance.rate = Number(rate.value);
+        utterance.pitch = Number(pitch.value);
+        utterance.volume = 1;
+        if (selectedVoice) {
+          utterance.voice = selectedVoice;
+          utterance.lang = selectedVoice.lang;
+        }
+        utterance.onend = resolve;
+        utterance.onerror = resolve;
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utterance);
+      });
+    }
+
+    async function animateLine(lineIndex, repeatIndex, totalRepeats, totalLines) {
+      const lines = getLines();
+      const tokens = [...document.querySelectorAll(`.token[data-line="${lineIndex}"]`)];
+      const lineEl = document.querySelector(`.line[data-line="${lineIndex}"]`);
+      lineEl.classList.add("current");
+
+      const speakableWords = tokens.filter((token) => !token.classList.contains("punctuation")).length;
+      const duration = Math.max(1600, speakableWords * 650 / Number(rate.value));
+      const step = duration / Math.max(tokens.length, 1);
+      const speaking = speak(lines[lineIndex].english);
+      const completedBefore = repeatIndex * totalLines + lineIndex;
+      const totalSteps = totalRepeats * totalLines;
+
+      for (let i = 0; i < tokens.length; i += 1) {
+        if (stopped) break;
+        tokens.forEach((token) => token.classList.remove("active"));
+        tokens[i].classList.add("active");
+        for (let j = 0; j < i; j += 1) {
+          tokens[j].classList.add("done");
+        }
+        bar.style.width = `${((completedBefore + (i + 1) / tokens.length) / totalSteps) * 100}%`;
+        await wait(step);
+      }
+
+      tokens.forEach((token) => {
+        token.classList.remove("active");
+        token.classList.add("done");
+      });
+      await speaking;
+      await wait(320);
+      lineEl.classList.remove("current");
+    }
+
+    async function playAll() {
+      const lines = getLines();
+      const totalRepeats = Math.min(20, Math.max(1, Number(repeatCount.value) || 1));
+      if (!lines.length) {
+        statusText.textContent = "請先輸入英文句子。";
+        return;
+      }
+
+      stopped = false;
+      playButton.disabled = true;
+      render();
+      resetVisuals();
+
+      for (let repeatIndex = 0; repeatIndex < totalRepeats; repeatIndex += 1) {
+        for (let lineIndex = 0; lineIndex < lines.length; lineIndex += 1) {
+          if (stopped) break;
+          statusText.textContent = `朗讀中：第 ${repeatIndex + 1} 次 / 共 ${totalRepeats} 次`;
+          await animateLine(lineIndex, repeatIndex, totalRepeats, lines.length);
+        }
+        if (stopped) break;
+        if (repeatIndex < totalRepeats - 1) {
+          resetVisuals();
+          await wait(600);
+        }
+      }
+
+      if (!stopped) {
+        bar.style.width = "100%";
+        statusText.textContent = "朗讀完成。";
+      }
+      playButton.disabled = false;
+    }
+
+    function stopAll() {
+      stopped = true;
+      clearTimers();
+      if ("speechSynthesis" in window) {
+        speechSynthesis.cancel();
+      }
+      resetVisuals();
+      statusText.textContent = "已停止。";
+      playButton.disabled = false;
+    }
+
+    playButton.addEventListener("click", playAll);
+    stopButton.addEventListener("click", stopAll);
+    englishInput.addEventListener("input", render);
+    chineseInput.addEventListener("input", render);
+    rate.addEventListener("input", refreshSliderLabels);
+    pitch.addEventListener("input", refreshSliderLabels);
+    if ("speechSynthesis" in window) {
+      speechSynthesis.addEventListener("voiceschanged", loadVoices);
+      loadVoices();
+    }
+    refreshSliderLabels();
+    render();
+  </script>
+</body>
+</html>
