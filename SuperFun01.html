@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Super Fun 1｜ABC 字母王國 A–M</title>
+<style>
+  :root{
+    --ink:#2f3542;
+    --muted:#7b8794;
+    --paper:#ffffff;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:"Comic Sans MS","Chalkboard SE","Segoe UI Rounded","Microsoft JhengHei","微軟正黑體",sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(1200px 600px at 8% -10%, #ffe8ef 0%, transparent 60%),
+      radial-gradient(1000px 500px at 95% 0%, #e4f0ff 0%, transparent 55%),
+      radial-gradient(900px 600px at 50% 110%, #eaffe9 0%, transparent 60%),
+      #fbfaf7;
+    min-height:100vh;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:26px 20px 48px}
+
+  /* ---------- HERO ---------- */
+  .hero{text-align:center;margin-bottom:18px}
+  .badge{
+    display:inline-block;font-size:13px;letter-spacing:.12em;font-weight:700;
+    color:#fff;background:linear-gradient(135deg,#ff8fab,#ff5d8f);
+    padding:6px 16px;border-radius:999px;box-shadow:0 6px 14px rgba(255,93,143,.35);
+  }
+  h1{
+    margin:14px 0 6px;font-size:clamp(28px,4.4vw,46px);line-height:1.15;letter-spacing:.02em;
+  }
+  h1 em{
+    font-style:normal;
+    background:linear-gradient(135deg,#ff6b6b,#ffa62b,#4d96ff,#7b61ff);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .sub{margin:0;color:var(--muted);font-size:15px}
+
+  /* ---------- TOOLBAR ---------- */
+  .toolbar{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:20px 0 24px}
+  .btn{
+    font-family:inherit;font-size:15px;font-weight:700;color:#3d4451;cursor:pointer;
+    background:#fff;border:2px solid #e7e3da;border-radius:16px;padding:10px 18px;
+    box-shadow:0 4px 0 #e7e3da;transition:transform .12s,box-shadow .12s,background .2s;
+  }
+  .btn:hover{transform:translateY(-1px);box-shadow:0 6px 0 #e7e3da}
+  .btn:active{transform:translateY(3px);box-shadow:0 1px 0 #e7e3da}
+  .btn.primary{color:#fff;background:linear-gradient(135deg,#6bcb77,#33a852);border-color:#33a852;box-shadow:0 4px 0 #2b8c45}
+  .btn.primary:active{box-shadow:0 1px 0 #2b8c45}
+  .btn.on{background:#fff9e6;border-color:#ffd166;box-shadow:0 4px 0 #ffd166}
+
+  /* ---------- GRID ---------- */
+  .grid{
+    display:grid;gap:20px;
+    grid-template-columns:repeat(auto-fill,minmax(196px,1fr));
+  }
+  .card{
+    position:relative;background:var(--paper);border-radius:26px;padding:16px 14px 18px;
+    border:3px solid var(--c);cursor:pointer;overflow:hidden;
+    box-shadow:0 8px 0 color-mix(in srgb,var(--c) 24%,#ffffff), 0 14px 26px rgba(47,53,66,.08);
+    transition:transform .18s ease, box-shadow .18s ease;
+    text-align:center;
+    animation:pop .45s backwards;
+  }
+  @keyframes pop{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:none}}
+  .card::before{
+    content:"";position:absolute;inset:0 0 auto;height:86px;
+    background:linear-gradient(180deg,color-mix(in srgb,var(--c) 16%,#fff),transparent);
+    pointer-events:none;
+  }
+  .card:hover{transform:translateY(-5px) rotate(-.6deg);box-shadow:0 13px 0 color-mix(in srgb,var(--c) 26%,#fff),0 20px 34px rgba(47,53,66,.14)}
+  .card.speaking{animation:jump .55s ease}
+  @keyframes jump{0%{transform:translateY(0) scale(1)}30%{transform:translateY(-14px) scale(1.05) rotate(1.5deg)}60%{transform:translateY(0) scale(.98)}100%{transform:none}}
+  .card.picked{border-color:#ff5d8f;box-shadow:0 0 0 5px rgba(255,93,143,.25),0 13px 0 #ffd0dd,0 20px 34px rgba(255,93,143,.2)}
+
+  .letters{display:flex;align-items:baseline;justify-content:center;gap:10px;position:relative}
+  .up{font-size:60px;font-weight:800;line-height:1;color:var(--c);text-shadow:0 3px 0 color-mix(in srgb,var(--c) 22%,#fff)}
+  .low{font-size:26px;font-weight:700;color:color-mix(in srgb,var(--c) 72%,#4b5563)}
+  .pic{font-size:56px;line-height:1;margin:8px 0 10px;filter:drop-shadow(0 4px 6px rgba(0,0,0,.10))}
+  .word{font-size:23px;font-weight:800;letter-spacing:.01em;color:#333b48}
+  .zh{font-size:15px;color:var(--muted);margin-top:4px;font-family:"Microsoft JhengHei","微軟正黑體",sans-serif}
+  .zh.hidden{display:none}
+  .speaker{
+    position:absolute;top:10px;right:12px;font-size:15px;opacity:.45;transition:.2s;
+  }
+  .card:hover .speaker{opacity:1}
+
+  footer{margin-top:34px;text-align:center;color:#9aa4b1;font-size:13px;line-height:1.9}
+
+  @media (max-width:520px){
+    .grid{grid-template-columns:repeat(2,1fr);gap:14px}
+    .up{font-size:46px}.low{font-size:20px}.pic{font-size:44px}.word{font-size:18px}
+    .card{border-radius:22px;padding:12px 8px 14px}
+  }
+  @media print{
+    body{background:#fff}
+    .toolbar,footer{display:none}
+    .card{box-shadow:none;break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="badge">何嘉仁 Super Fun 1</div>
+    <h1>ABC 字母王國 <em>A – M</em></h1>
+    <p class="sub">點卡片聽發音 🔊　也可以直接按鍵盤上的字母鍵</p>
+  </header>
+
+  <div class="toolbar">
+    <button class="btn primary" id="playAll">🔊 全部朗讀</button>
+    <button class="btn" id="stopAll">⏹ 停止</button>
+    <button class="btn on" id="toggleZh">🈶 中文：開</button>
+    <button class="btn" id="randomOne">🎲 抽一張</button>
+  </div>
+
+  <main class="grid" id="grid"></main>
+
+  <footer>
+    陳育橙 · 英文練習頁 · 共 13 個字母（A ~ M）<br>
+    發音由瀏覽器語音合成（建議使用 Chrome / Edge，音量請開啟）
+  </footer>
+</div>
+
+<script>
+const DATA = [
+  {L:"A", l:"a", w:"ant",    z:"螞蟻", e:"🐜", c:"#FF6B6B"},
+  {L:"B", l:"b", w:"bag",    z:"袋子", e:"👜", c:"#FF9F43"},
+  {L:"C", l:"c", w:"cat",    z:"貓",   e:"🐱", c:"#F7B801"},
+  {L:"D", l:"d", w:"dog",    z:"狗",   e:"🐶", c:"#6BCB77"},
+  {L:"E", l:"e", w:"egg",    z:"蛋",   e:"🥚", c:"#2EC4B6"},
+  {L:"F", l:"f", w:"fish",   z:"魚",   e:"🐟", c:"#4D96FF"},
+  {L:"G", l:"g", w:"girl",   z:"女孩", e:"👧", c:"#5C7CFA"},
+  {L:"H", l:"h", w:"hat",    z:"帽子", e:"🎩", c:"#7B61FF"},
+  {L:"I", l:"i", w:"insect", z:"昆蟲", e:"🐞", c:"#C56CF0"},
+  {L:"J", l:"j", w:"jet",    z:"飛機", e:"✈️", c:"#FF6FB5"},
+  {L:"K", l:"k", w:"kite",   z:"風箏", e:"🪁", c:"#FF7F50"},
+  {L:"L", l:"l", w:"lion",   z:"獅子", e:"🦁", c:"#EDAE49"},
+  {L:"M", l:"m", w:"monkey", z:"猴子", e:"🐵", c:"#58B368"}
+];
+
+const grid = document.getElementById('grid');
+DATA.forEach((d, i) => {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.style.setProperty('--c', d.c);
+  card.style.animationDelay = (i * 45) + 'ms';
+  card.dataset.letter = d.L;
+  card.innerHTML = `
+    <div class="speaker">🔊</div>
+    <div class="letters"><span class="up">${d.L}</span><span class="low">${d.l}</span></div>
+    <div class="pic">${d.e}</div>
+    <div class="word">${d.w}</div>
+    <div class="zh">${d.z}</div>`;
+  card.addEventListener('click', () => { resetPick(); say(card, d); });
+  grid.appendChild(card);
+});
+
+/* ---------- 語音 ---------- */
+let voice = null;
+function pickVoice(){
+  const vs = speechSynthesis.getVoices().filter(v => /^en/i.test(v.lang));
+  voice = vs.find(v => /Google US English|Samantha|Microsoft (Aria|Zira|Jenny|Guy)/i.test(v.name)) || vs[0] || null;
+}
+pickVoice();
+if ('speechSynthesis' in window) speechSynthesis.onvoiceschanged = pickVoice;
+
+let seqTimer = null;
+function speak(text, rate = 0.8){
+  if (!('speechSynthesis' in window)) return;
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-US';
+  u.rate = rate;
+  u.pitch = 1.05;
+  if (voice) u.voice = voice;
+  speechSynthesis.speak(u);
+}
+function say(card, d){
+  speechSynthesis.cancel();
+  card.classList.add('speaking');
+  setTimeout(() => card.classList.remove('speaking'), 600);
+  speak(`${d.L}. ${d.l}. ${d.w}. ${d.w}.`);
+}
+
+/* ---------- 全部朗讀 ---------- */
+const playAllBtn = document.getElementById('playAll');
+const stopBtn = document.getElementById('stopAll');
+playAllBtn.addEventListener('click', () => {
+  speechSynthesis.cancel();
+  const cards = [...grid.children];
+  cards.forEach(c => c.classList.remove('picked'));
+  let i = 0;
+  const step = () => {
+    if (i >= cards.length) return;
+    const card = cards[i], d = DATA[i];
+    card.classList.add('picked');
+    card.classList.add('speaking');
+    setTimeout(() => card.classList.remove('speaking'), 600);
+    card.scrollIntoView({behavior:'smooth', block:'center'});
+    speak(`${d.L}. ${d.l}. ${d.w}.`, 0.75);
+    // 等這句話講完再換下一張
+    const wait = () => {
+      if (speechSynthesis.speaking || speechSynthesis.pending) {
+        seqTimer = setTimeout(wait, 120);
+      } else {
+        card.classList.remove('picked');
+        i++;
+        seqTimer = setTimeout(step, 260);
+      }
+    };
+    seqTimer = setTimeout(wait, 400);
+  };
+  step();
+});
+stopBtn.addEventListener('click', () => {
+  clearTimeout(seqTimer);
+  speechSynthesis.cancel();
+  [...grid.children].forEach(c => c.classList.remove('picked','speaking'));
+});
+
+/* ---------- 中文開關 ---------- */
+const zhBtn = document.getElementById('toggleZh');
+zhBtn.addEventListener('click', () => {
+  const hide = !document.querySelector('.zh').classList.contains('hidden');
+  document.querySelectorAll('.zh').forEach(el => el.classList.toggle('hidden', hide));
+  zhBtn.classList.toggle('on', !hide);
+  zhBtn.textContent = hide ? '🈶 中文：關' : '🈶 中文：開';
+});
+
+/* ---------- 抽一張 ---------- */
+function resetPick(){ [...grid.children].forEach(c => c.classList.remove('picked')); }
+document.getElementById('randomOne').addEventListener('click', () => {
+  resetPick();
+  const i = Math.floor(Math.random() * DATA.length);
+  const card = grid.children[i];
+  card.classList.add('picked');
+  card.scrollIntoView({behavior:'smooth', block:'center'});
+  say(card, DATA[i]);
+});
+
+/* ---------- 鍵盤 ---------- */
+document.addEventListener('keydown', (ev) => {
+  const k = ev.key.toUpperCase();
+  const i = DATA.findIndex(d => d.L === k);
+  if (i > -1){
+    resetPick();
+    const card = grid.children[i];
+    card.classList.add('picked');
+    card.scrollIntoView({behavior:'smooth', block:'center'});
+    say(card, DATA[i]);
+  }
+  if (ev.code === 'Space'){ ev.preventDefault(); playAllBtn.click(); }
+});
+</script>
+</body>
+</html>
