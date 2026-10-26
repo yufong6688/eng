@@ -164,7 +164,7 @@
         <button class="btn" id="mp3Random">🎲 抽一張</button>
       </div>
       <main class="grid" id="grid2"></main>
-      <p class="note">真人發音：由「字母韻文 A–Z」影片切段而成（A.mp3 ~ Z.mp3，共 26 段）</p>
+      <p class="note">真人發音：由「字母韻文 A–Z」影片切段而成（A.mp3 ~ Z.mp3，共 26 段）·若音檔載不到會自動改用 TTS</p>
     </section>
 
     <!-- ============ 3. 四段影片 ============ -->
@@ -182,7 +182,7 @@
 
   <footer>
     陳育橙 · 英文練習頁 · 共 26 個字母（A ~ Z）<br>
-    真人音檔與影片只存在本機 attachments 資料夾（不上傳公開網站）
+    真人音檔與影片放在 attachments 資料夾
   </footer>
 </div>
 
@@ -478,14 +478,10 @@ document.addEventListener('keydown', ev => {
 /* ================= 4. 完整 A-Z 影片 ================= */
 (function mountFull(){
   const wrap = document.getElementById('vfullWrap');
-  if (ONLINE){
-    wrap.innerHTML = `<div class="empty">完整 A–Z 影片（19.7 MB）屬教材內容，只放在本機，<br>沒有上傳到公開網站。<br><br>要線上看，請切到「🎬 四段韻文影片」（YouTube 內嵌）。</div>`;
-    return;
-  }
   wrap.innerHTML = `<video controls playsinline preload="metadata" src="${FULL_VIDEO}"></video>`;
   const v = wrap.querySelector('video');
   v.addEventListener('error', () => {
-    wrap.innerHTML = `<div class="empty">找不到檔案：attachments/字母韻文_A-Z.mp4</div>`;
+    wrap.innerHTML = `<div class="empty">找不到完整影片檔（attachments/字母韻文_A-Z.mp4）。<br>可先切到「🎬 四段韻文影片」觀看。</div>`;
   });
 })();
 </script>
