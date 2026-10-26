@@ -379,11 +379,15 @@ function playMp3(card, d){
   card.classList.add('picked','speaking');
   setTimeout(() => card.classList.remove('speaking'), 600);
   a.src = mp3Url(d.L);
-  a.onerror = () => {           // 線上沒有音檔 → 退回 TTS
+  let done = false;
+  const fallback = () => {          // 線上沒有音檔 → 退回 TTS（只唸一次）
+    if (done) return; done = true;
+    card.classList.remove('picked');
     speak(`${d.L}. ${d.L}. ${d.w}.`);
   };
-  a.play().catch(() => speak(`${d.L}. ${d.L}. ${d.w}.`));
-  a.onended = () => card.classList.remove('picked');
+  a.onerror = fallback;
+  a.play().catch(fallback);
+  a.onended = () => { if (done) return; done = true; card.classList.remove('picked'); };
 }
 
 document.getElementById('mp3All').addEventListener('click', () => {
@@ -399,9 +403,15 @@ document.getElementById('mp3All').addEventListener('click', () => {
     card.scrollIntoView({behavior:'smooth', block:'center'});
     a.onended = null; a.onerror = null;
     a.src = mp3Url(d.L);
-    a.onerror = () => { speak(`${d.L}. ${d.L}. ${d.w}.`); mp3Timer = setTimeout(() => { mp3Index++; next(); }, 1600); };
-    a.onended = () => { mp3Timer = setTimeout(() => { mp3Index++; next(); }, 200); };
-    a.play().catch(() => { speak(`${d.L}. ${d.L}. ${d.w}.`); mp3Timer = setTimeout(() => { mp3Index++; next(); }, 1600); });
+    let done = false;
+    const fallback = () => {
+      if (done) return; done = true;
+      speak(`${d.L}. ${d.L}. ${d.w}.`);
+      mp3Timer = setTimeout(() => { mp3Index++; next(); }, 1700);
+    };
+    a.onerror = fallback;
+    a.play().catch(fallback);
+    a.onended = () => { if (done) return; done = true; mp3Timer = setTimeout(() => { mp3Index++; next(); }, 200); };
   };
   next();
 });
