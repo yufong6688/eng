@@ -3,131 +3,191 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Super Fun 1｜ABC 字母王國 A–M</title>
+<title>Super Fun 1｜ABC 字母王國 A–Z</title>
 <style>
-  :root{
-    --ink:#2f3542;
-    --muted:#7b8794;
-    --paper:#ffffff;
-  }
+  :root{ --ink:#2f3542; --muted:#7b8794; --paper:#fff; }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;padding:0}
   body{
     font-family:"Comic Sans MS","Chalkboard SE","Segoe UI Rounded","Microsoft JhengHei","微軟正黑體",sans-serif;
-    color:var(--ink);
+    color:var(--ink);min-height:100vh;
     background:
       radial-gradient(1200px 600px at 8% -10%, #ffe8ef 0%, transparent 60%),
       radial-gradient(1000px 500px at 95% 0%, #e4f0ff 0%, transparent 55%),
       radial-gradient(900px 600px at 50% 110%, #eaffe9 0%, transparent 60%),
       #fbfaf7;
-    min-height:100vh;
   }
   .wrap{max-width:1180px;margin:0 auto;padding:26px 20px 48px}
 
   /* ---------- HERO ---------- */
-  .hero{text-align:center;margin-bottom:18px}
-  .badge{
-    display:inline-block;font-size:13px;letter-spacing:.12em;font-weight:700;
-    color:#fff;background:linear-gradient(135deg,#ff8fab,#ff5d8f);
-    padding:6px 16px;border-radius:999px;box-shadow:0 6px 14px rgba(255,93,143,.35);
-  }
-  h1{
-    margin:14px 0 6px;font-size:clamp(28px,4.4vw,46px);line-height:1.15;letter-spacing:.02em;
-  }
-  h1 em{
-    font-style:normal;
-    background:linear-gradient(135deg,#ff6b6b,#ffa62b,#4d96ff,#7b61ff);
-    -webkit-background-clip:text;background-clip:text;color:transparent;
-  }
+  .hero{text-align:center;margin-bottom:14px}
+  .badge{display:inline-block;font-size:13px;letter-spacing:.12em;font-weight:700;color:#fff;
+    background:linear-gradient(135deg,#ff8fab,#ff5d8f);padding:6px 16px;border-radius:999px;
+    box-shadow:0 6px 14px rgba(255,93,143,.35)}
+  h1{margin:14px 0 6px;font-size:clamp(26px,4.2vw,44px);line-height:1.15;letter-spacing:.02em}
+  h1 em{font-style:normal;background:linear-gradient(135deg,#ff6b6b,#ffa62b,#4d96ff,#7b61ff);
+    -webkit-background-clip:text;background-clip:text;color:transparent}
   .sub{margin:0;color:var(--muted);font-size:15px}
 
-  /* ---------- TOOLBAR ---------- */
-  .toolbar{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:20px 0 24px}
-  .btn{
-    font-family:inherit;font-size:15px;font-weight:700;color:#3d4451;cursor:pointer;
-    background:#fff;border:2px solid #e7e3da;border-radius:16px;padding:10px 18px;
-    box-shadow:0 4px 0 #e7e3da;transition:transform .12s,box-shadow .12s,background .2s;
+  /* ---------- TABS ---------- */
+  .tabs{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:22px 0 6px}
+  .tab{
+    font-family:inherit;font-size:15px;font-weight:800;color:#5a6472;cursor:pointer;
+    background:#fff;border:2px solid #e7e3da;border-radius:16px 16px 0 0;padding:12px 18px;
+    box-shadow:0 4px 0 #e7e3da;transition:.15s;position:relative;top:2px;
   }
+  .tab:hover{transform:translateY(-1px)}
+  .tab.active{
+    color:#fff;background:linear-gradient(135deg,#6bcb77,#33a852);border-color:#33a852;
+    box-shadow:0 4px 0 #2b8c45;top:0;
+  }
+  .tabpanes{background:#fff;border:3px solid #ece7dd;border-radius:0 22px 22px 22px;
+    padding:18px 16px 22px;box-shadow:0 10px 26px rgba(47,53,66,.07)}
+  .pane{display:none;animation:fade .25s ease}
+  .pane.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  /* ---------- TOOLBAR / 設定列 ---------- */
+  .toolbar{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:6px 0 18px}
+  .btn{font-family:inherit;font-size:15px;font-weight:700;color:#3d4451;cursor:pointer;
+    background:#fff;border:2px solid #e7e3da;border-radius:16px;padding:10px 18px;
+    box-shadow:0 4px 0 #e7e3da;transition:transform .12s,box-shadow .12s,background .2s}
   .btn:hover{transform:translateY(-1px);box-shadow:0 6px 0 #e7e3da}
   .btn:active{transform:translateY(3px);box-shadow:0 1px 0 #e7e3da}
   .btn.primary{color:#fff;background:linear-gradient(135deg,#6bcb77,#33a852);border-color:#33a852;box-shadow:0 4px 0 #2b8c45}
   .btn.primary:active{box-shadow:0 1px 0 #2b8c45}
   .btn.on{background:#fff9e6;border-color:#ffd166;box-shadow:0 4px 0 #ffd166}
 
-  /* ---------- GRID ---------- */
-  .grid{
-    display:grid;gap:20px;
-    grid-template-columns:repeat(auto-fill,minmax(196px,1fr));
-  }
-  .card{
-    position:relative;background:var(--paper);border-radius:26px;padding:16px 14px 18px;
-    border:3px solid var(--c);cursor:pointer;overflow:hidden;
+  .panel{display:flex;flex-wrap:wrap;gap:18px;justify-content:center;align-items:center;
+    background:#fbfaf7;border:2px solid #ece7dd;border-radius:18px;padding:12px 18px;
+    margin:0 auto 16px;max-width:760px}
+  .field{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:700;color:#4a5260}
+  .field select{font-family:inherit;font-size:14px;font-weight:700;color:#3d4451;cursor:pointer;
+    background:#fff;border:2px solid #e7e3da;border-radius:12px;padding:8px 10px;max-width:230px}
+  .field input[type=range]{width:130px;accent-color:#33a852;cursor:pointer}
+  .rateval{display:inline-block;min-width:52px;text-align:center;font-size:14px;color:#33a852;
+    background:#eaffe9;border-radius:8px;padding:3px 6px}
+  .note{text-align:center;color:var(--muted);font-size:14px;margin:0 0 16px;line-height:1.7;
+    font-family:"Microsoft JhengHei","微軟正黑體",sans-serif}
+
+  /* ---------- GRID / CARD ---------- */
+  .grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fill,minmax(196px,1fr))}
+  .card{position:relative;background:var(--paper);border-radius:26px;padding:16px 14px 18px;
+    border:3px solid var(--c);cursor:pointer;overflow:hidden;text-align:center;
     box-shadow:0 8px 0 color-mix(in srgb,var(--c) 24%,#ffffff), 0 14px 26px rgba(47,53,66,.08);
-    transition:transform .18s ease, box-shadow .18s ease;
-    text-align:center;
-    animation:pop .45s backwards;
-  }
+    transition:transform .18s ease, box-shadow .18s ease;animation:pop .45s backwards}
   @keyframes pop{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:none}}
-  .card::before{
-    content:"";position:absolute;inset:0 0 auto;height:86px;
-    background:linear-gradient(180deg,color-mix(in srgb,var(--c) 16%,#fff),transparent);
-    pointer-events:none;
-  }
-  .card:hover{transform:translateY(-5px) rotate(-.6deg);box-shadow:0 13px 0 color-mix(in srgb,var(--c) 26%,#fff),0 20px 34px rgba(47,53,66,.14)}
+  .card::before{content:"";position:absolute;inset:0 0 auto;height:86px;
+    background:linear-gradient(180deg,color-mix(in srgb,var(--c) 16%,#fff),transparent);pointer-events:none}
+  .card:hover{transform:translateY(-5px) rotate(-.6deg);
+    box-shadow:0 13px 0 color-mix(in srgb,var(--c) 26%,#fff),0 20px 34px rgba(47,53,66,.14)}
   .card.speaking{animation:jump .55s ease}
   @keyframes jump{0%{transform:translateY(0) scale(1)}30%{transform:translateY(-14px) scale(1.05) rotate(1.5deg)}60%{transform:translateY(0) scale(.98)}100%{transform:none}}
   .card.picked{border-color:#ff5d8f;box-shadow:0 0 0 5px rgba(255,93,143,.25),0 13px 0 #ffd0dd,0 20px 34px rgba(255,93,143,.2)}
-
   .letters{display:flex;align-items:baseline;justify-content:center;gap:10px;position:relative}
   .up{font-size:60px;font-weight:800;line-height:1;color:var(--c);text-shadow:0 3px 0 color-mix(in srgb,var(--c) 22%,#fff)}
   .low{font-size:26px;font-weight:700;color:color-mix(in srgb,var(--c) 72%,#4b5563)}
   .pic{font-size:56px;line-height:1;margin:8px 0 10px;filter:drop-shadow(0 4px 6px rgba(0,0,0,.10))}
   .word{font-size:23px;font-weight:800;letter-spacing:.01em;color:#333b48}
-  .zh{font-size:15px;color:var(--muted);margin-top:4px;font-family:"Microsoft JhengHei","微軟正黑體",sans-serif}
+  .zh{font-size:19px;font-weight:700;color:#5b6573;margin-top:6px;line-height:1.25;
+    font-family:"Microsoft JhengHei","微軟正黑體",sans-serif}
   .zh.hidden{display:none}
-  .speaker{
-    position:absolute;top:10px;right:12px;font-size:15px;opacity:.45;transition:.2s;
-  }
+  .speaker{position:absolute;top:10px;right:12px;font-size:15px;opacity:.45;transition:.2s}
   .card:hover .speaker{opacity:1}
 
-  footer{margin-top:34px;text-align:center;color:#9aa4b1;font-size:13px;line-height:1.9}
+  /* ---------- VIDEO ---------- */
+  .vgrid{display:grid;gap:18px;grid-template-columns:repeat(2,1fr)}
+  @media (max-width:640px){ .vgrid{grid-template-columns:1fr} }
+  .vcell{background:#fbfaf7;border:2px solid #ece7dd;border-radius:18px;padding:10px 10px 8px}
+  .vcell video{width:100%;display:block;border-radius:12px;background:#000}
+  .vcell .vwrap{position:relative;padding-top:56.25%;border-radius:12px;overflow:hidden;background:#000}
+  .vcell iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .vcap{font-size:14px;font-weight:700;color:#5b6573;margin:8px 2px 2px;
+    font-family:"Microsoft JhengHei","微軟正黑體",sans-serif;text-align:center}
+  .fullwrap video{width:100%;display:block;border-radius:18px;background:#000;box-shadow:0 10px 24px rgba(0,0,0,.18)}
+  .empty{text-align:center;color:#8a94a1;font-size:15px;line-height:1.9;padding:26px 10px;
+    font-family:"Microsoft JhengHei","微軟正黑體",sans-serif}
 
+  footer{margin-top:30px;text-align:center;color:#9aa4b1;font-size:13px;line-height:1.9}
   @media (max-width:520px){
     .grid{grid-template-columns:repeat(2,1fr);gap:14px}
-    .up{font-size:46px}.low{font-size:20px}.pic{font-size:44px}.word{font-size:18px}
+    .up{font-size:46px}.low{font-size:20px}.pic{font-size:44px}.word{font-size:18px}.zh{font-size:16px}
     .card{border-radius:22px;padding:12px 8px 14px}
+    .tab{font-size:13px;padding:10px 12px}
   }
-  @media print{
-    body{background:#fff}
-    .toolbar,footer{display:none}
-    .card{box-shadow:none;break-inside:avoid}
-  }
+  @media print{ body{background:#fff} .tabs,.toolbar,.panel,footer{display:none} .tabpanes{border:0;box-shadow:none} .pane{display:block!important} }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header class="hero">
     <div class="badge">何嘉仁 Super Fun 1</div>
-    <h1>ABC 字母王國 <em>A – M</em></h1>
-    <p class="sub">點卡片聽發音 🔊　也可以直接按鍵盤上的字母鍵</p>
+    <h1>ABC 字母王國 <em>A – Z</em></h1>
+    <p class="sub">四個頁籤：字母卡（TTS）／字母卡（真人音檔）／四段韻文影片／完整 A–Z 影片</p>
   </header>
 
-  <div class="toolbar">
-    <button class="btn primary" id="playAll">🔊 全部朗讀</button>
-    <button class="btn" id="stopAll">⏹ 停止</button>
-    <button class="btn on" id="toggleZh">🈶 中文：開</button>
-    <button class="btn" id="randomOne">🎲 抽一張</button>
+  <nav class="tabs" role="tablist">
+    <button class="tab active" data-tab="1" role="tab">🗣 字母卡＋TTS</button>
+    <button class="tab" data-tab="2" role="tab">🎧 字母卡＋真人音檔</button>
+    <button class="tab" data-tab="3" role="tab">🎬 四段韻文影片</button>
+    <button class="tab" data-tab="4" role="tab">📺 完整 A–Z 影片</button>
+  </nav>
+
+  <div class="tabpanes">
+    <!-- ============ 1. 字母卡 + TTS ============ -->
+    <section class="pane active" id="pane1">
+      <div class="panel">
+        <label class="field">🗣 朗讀的人
+          <select id="voiceSel"><option value="">自動選擇（推薦）</option></select>
+        </label>
+        <label class="field">🐢 唸的速度
+          <input id="rateEl" type="range" min="0.5" max="1.2" step="0.05" value="0.8">
+          <span class="rateval" id="rateVal">0.80×</span>
+        </label>
+      </div>
+      <div class="toolbar">
+        <button class="btn primary" id="ttsAll">🔊 全部朗讀</button>
+        <button class="btn" id="ttsStop">⏹ 停止</button>
+        <button class="btn on" id="zhBtn1">🈶 中文：開</button>
+        <button class="btn" id="ttsRandom">🎲 抽一張</button>
+      </div>
+      <main class="grid" id="grid1"></main>
+      <p class="note">點卡片唸「字母兩遍＋單字」（例：C. C. cat.）·也可直接按鍵盤 A~Z</p>
+    </section>
+
+    <!-- ============ 2. 字母卡 + 真人音檔 ============ -->
+    <section class="pane" id="pane2">
+      <div class="toolbar">
+        <button class="btn primary" id="mp3All">▶ 依序播放全部</button>
+        <button class="btn" id="mp3Stop">⏹ 停止</button>
+        <button class="btn on" id="zhBtn2">🈶 中文：開</button>
+        <button class="btn" id="mp3Random">🎲 抽一張</button>
+      </div>
+      <main class="grid" id="grid2"></main>
+      <p class="note">真人發音：由「字母韻文 A–Z」影片切段而成（A.mp3 ~ Z.mp3，共 26 段）</p>
+    </section>
+
+    <!-- ============ 3. 四段影片 ============ -->
+    <section class="pane" id="pane3">
+      <div class="vgrid" id="vgrid"></div>
+      <p class="note">四段韻文影片（二欄）：Aa~Ff、Gg~Mm、Nn~Ss、Tt~Zz</p>
+    </section>
+
+    <!-- ============ 4. 完整 A-Z 影片 ============ -->
+    <section class="pane" id="pane4">
+      <div class="fullwrap" id="vfullWrap"></div>
+      <p class="note">完整 A–Z 韻文影片（5 分 39 秒）</p>
+    </section>
   </div>
 
-  <main class="grid" id="grid"></main>
-
   <footer>
-    陳育橙 · 英文練習頁 · 共 13 個字母（A ~ M）<br>
-    發音由瀏覽器語音合成（建議使用 Chrome / Edge，音量請開啟）
+    陳育橙 · 英文練習頁 · 共 26 個字母（A ~ Z）<br>
+    真人音檔與影片只存在本機 attachments 資料夾（不上傳公開網站）
   </footer>
 </div>
 
 <script>
+/* ================= 資料 ================= */
 const DATA = [
   {L:"A", l:"a", w:"ant",    z:"螞蟻", e:"🐜", c:"#FF6B6B"},
   {L:"B", l:"b", w:"bag",    z:"袋子", e:"👜", c:"#FF9F43"},
@@ -141,121 +201,283 @@ const DATA = [
   {L:"J", l:"j", w:"jet",    z:"飛機", e:"✈️", c:"#FF6FB5"},
   {L:"K", l:"k", w:"kite",   z:"風箏", e:"🪁", c:"#FF7F50"},
   {L:"L", l:"l", w:"lion",   z:"獅子", e:"🦁", c:"#EDAE49"},
-  {L:"M", l:"m", w:"monkey", z:"猴子", e:"🐵", c:"#58B368"}
+  {L:"M", l:"m", w:"monkey", z:"猴子", e:"🐵", c:"#58B368"},
+  {L:"N", l:"n", w:"nose",   z:"鼻子", e:"👃", c:"#4CB8C4"},
+  {L:"O", l:"o", w:"ox",     z:"公牛", e:"🐂", c:"#F4A261"},
+  {L:"P", l:"p", w:"pig",    z:"豬",   e:"🐷", c:"#FF8FA3"},
+  {L:"Q", l:"q", w:"queen",  z:"女王", e:"👑", c:"#B388EB"},
+  {L:"R", l:"r", w:"rabbit", z:"兔子", e:"🐰", c:"#7ED957"},
+  {L:"S", l:"s", w:"six",    z:"六",   e:"6️⃣", c:"#4DA3FF"},
+  {L:"T", l:"t", w:"ten",    z:"十",   e:"🔟", c:"#FFB703"},
+  {L:"U", l:"u", w:"up",     z:"向上", e:"⬆️", c:"#48CAE4"},
+  {L:"V", l:"v", w:"vest",   z:"背心", e:"🦺", c:"#F28482"},
+  {L:"W", l:"w", w:"window", z:"窗戶", e:"🪟", c:"#6A994E"},
+  {L:"X", l:"x", w:"fox",    z:"狐狸", e:"🦊", c:"#E76F51"},
+  {L:"Y", l:"y", w:"yo-yo",  z:"溜溜球", e:"🪀", c:"#9B5DE5"},
+  {L:"Z", l:"z", w:"zebra",  z:"斑馬", e:"🦓", c:"#2A9D8F"}
 ];
 
-const grid = document.getElementById('grid');
-DATA.forEach((d, i) => {
-  const card = document.createElement('div');
-  card.className = 'card';
-  card.style.setProperty('--c', d.c);
-  card.style.animationDelay = (i * 45) + 'ms';
-  card.dataset.letter = d.L;
-  card.innerHTML = `
-    <div class="speaker">🔊</div>
-    <div class="letters"><span class="up">${d.L}</span><span class="low">${d.l}</span></div>
-    <div class="pic">${d.e}</div>
-    <div class="word">${d.w}</div>
-    <div class="zh">${d.z}</div>`;
-  card.addEventListener('click', () => { resetPick(); say(card, d); });
-  grid.appendChild(card);
-});
+const MP3_DIR = 'attachments/字母韻文_A-Z_attachments';
+const SEGS = [
+  {id:'379jDDi-3tY', label:'Aa ~ Ff', file:'attachments/字母韻文_Aa-Ff.mp4'},
+  {id:'XHjER-pg8FU', label:'Gg ~ Mm', file:'attachments/字母韻文_Gg-Mm.mp4'},
+  {id:'w2s178RcSLg', label:'Nn ~ Ss', file:'attachments/字母韻文_Nn-Ss.mp4'},
+  {id:'MbEc2B5zAL8', label:'Tt ~ Zz', file:'attachments/字母韻文_Tt-Zz.mp4'}
+];
+const FULL_VIDEO = 'attachments/字母韻文_A-Z.mp4';
+const ONLINE = /^https?:$/.test(location.protocol);
 
-/* ---------- 語音 ---------- */
-let voice = null;
-function pickVoice(){
-  const vs = speechSynthesis.getVoices().filter(v => /^en/i.test(v.lang));
-  voice = vs.find(v => /Google US English|Samantha|Microsoft (Aria|Zira|Jenny|Guy)/i.test(v.name)) || vs[0] || null;
+/* ================= 卡片建立 ================= */
+function buildGrid(el, mode){
+  el.innerHTML = '';
+  DATA.forEach((d, i) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.setProperty('--c', d.c);
+    card.style.animationDelay = (i * 30) + 'ms';
+    card.dataset.letter = d.L;
+    card.innerHTML = `
+      <div class="speaker">${mode === 'mp3' ? '🎧' : '🔊'}</div>
+      <div class="letters"><span class="up">${d.L}</span><span class="low">${d.l}</span></div>
+      <div class="pic">${d.e}</div>
+      <div class="word">${d.w}</div>
+      <div class="zh">${d.z}</div>`;
+    card.addEventListener('click', () => {
+      if (mode === 'mp3') playMp3(card, d); else sayTTS(card, d);
+    });
+    el.appendChild(card);
+  });
 }
-pickVoice();
-if ('speechSynthesis' in window) speechSynthesis.onvoiceschanged = pickVoice;
+const grid1 = document.getElementById('grid1');
+const grid2 = document.getElementById('grid2');
+buildGrid(grid1, 'tts');
+buildGrid(grid2, 'mp3');
 
-let seqTimer = null;
-function speak(text, rate = 0.8){
+/* ================= 頁籤切換 ================= */
+const tabs = [...document.querySelectorAll('.tab')];
+const panes = {1:'pane1', 2:'pane2', 3:'pane3', 4:'pane4'};
+let currentTab = '1';
+function stopEverything(){
+  try{ speechSynthesis.cancel(); }catch(e){}
+  clearTimeout(seqTimer); clearTimeout(mp3Timer);
+  if (audio){ audio.pause(); audio.removeAttribute('src'); }
+  document.querySelectorAll('.card').forEach(c => c.classList.remove('picked','speaking'));
+  document.querySelectorAll('video').forEach(v => v.pause());
+}
+tabs.forEach(t => t.addEventListener('click', () => {
+  stopEverything();
+  currentTab = t.dataset.tab;
+  tabs.forEach(x => x.classList.toggle('active', x === t));
+  Object.entries(panes).forEach(([k, id]) => {
+    document.getElementById(id).classList.toggle('active', k === currentTab);
+  });
+  window.scrollTo({top:0, behavior:'smooth'});
+}));
+
+/* ================= 1. TTS ================= */
+const voiceSel = document.getElementById('voiceSel');
+const rateEl   = document.getElementById('rateEl');
+const rateVal  = document.getElementById('rateVal');
+let voice = null, rate = parseFloat(rateEl.value), seqTimer = null;
+
+rateEl.addEventListener('input', () => {
+  rate = parseFloat(rateEl.value);
+  rateVal.textContent = rate.toFixed(2) + '×';
+});
+const isEn = v => /^en([-_]|$)/i.test(v.lang || '');
+function fillVoices(){
+  if (!('speechSynthesis' in window)) return;
+  const all = speechSynthesis.getVoices() || [];
+  const en = all.filter(isEn);
+  const list = en.length ? en : all;
+  const keep = voiceSel.value;
+  voiceSel.innerHTML = '<option value="">自動選擇（推薦）</option>';
+  list.forEach(v => {
+    const o = document.createElement('option');
+    o.value = v.name; o.textContent = `${v.name}（${v.lang}）`;
+    voiceSel.appendChild(o);
+  });
+  if (keep && [...voiceSel.options].some(o => o.value === keep)) voiceSel.value = keep;
+  applyVoice();
+}
+function applyVoice(){
+  const all = speechSynthesis.getVoices() || [];
+  if (voiceSel.value) voice = all.find(v => v.name === voiceSel.value) || null;
+  else voice = all.filter(isEn).find(v => /Google US English|Samantha|Microsoft (Aria|Jenny|Zira|Guy)/i.test(v.name))
+            || all.filter(isEn)[0] || null;
+}
+voiceSel.addEventListener('change', applyVoice);
+if ('speechSynthesis' in window){
+  fillVoices();
+  speechSynthesis.onvoiceschanged = fillVoices;
+  setTimeout(fillVoices, 400);
+}
+function speak(text){
   if (!('speechSynthesis' in window)) return;
   const u = new SpeechSynthesisUtterance(text);
-  u.lang = 'en-US';
-  u.rate = rate;
-  u.pitch = 1.05;
+  u.lang = (voice && voice.lang) ? voice.lang : 'en-US';
+  u.rate = rate; u.pitch = 1.05;
   if (voice) u.voice = voice;
   speechSynthesis.speak(u);
 }
-function say(card, d){
+function sayTTS(card, d){
   speechSynthesis.cancel();
-  card.classList.add('speaking');
+  resetPick(grid1); card.classList.add('picked','speaking');
   setTimeout(() => card.classList.remove('speaking'), 600);
-  speak(`${d.L}. ${d.l}. ${d.w}. ${d.w}.`);
+  speak(`${d.L}. ${d.L}. ${d.w}.`);
 }
-
-/* ---------- 全部朗讀 ---------- */
-const playAllBtn = document.getElementById('playAll');
-const stopBtn = document.getElementById('stopAll');
-playAllBtn.addEventListener('click', () => {
+document.getElementById('ttsAll').addEventListener('click', () => {
   speechSynthesis.cancel();
-  const cards = [...grid.children];
-  cards.forEach(c => c.classList.remove('picked'));
+  const cards = [...grid1.children];
+  resetPick(grid1);
   let i = 0;
   const step = () => {
     if (i >= cards.length) return;
     const card = cards[i], d = DATA[i];
-    card.classList.add('picked');
-    card.classList.add('speaking');
+    card.classList.add('picked','speaking');
     setTimeout(() => card.classList.remove('speaking'), 600);
     card.scrollIntoView({behavior:'smooth', block:'center'});
-    speak(`${d.L}. ${d.l}. ${d.w}.`, 0.75);
-    // 等這句話講完再換下一張
+    speak(`${d.L}. ${d.L}. ${d.w}.`);
     const wait = () => {
-      if (speechSynthesis.speaking || speechSynthesis.pending) {
-        seqTimer = setTimeout(wait, 120);
-      } else {
-        card.classList.remove('picked');
-        i++;
-        seqTimer = setTimeout(step, 260);
-      }
+      if (speechSynthesis.speaking || speechSynthesis.pending) seqTimer = setTimeout(wait, 120);
+      else { card.classList.remove('picked'); i++; seqTimer = setTimeout(step, 260); }
     };
     seqTimer = setTimeout(wait, 400);
   };
   step();
 });
-stopBtn.addEventListener('click', () => {
-  clearTimeout(seqTimer);
-  speechSynthesis.cancel();
-  [...grid.children].forEach(c => c.classList.remove('picked','speaking'));
+document.getElementById('ttsStop').addEventListener('click', () => {
+  clearTimeout(seqTimer); speechSynthesis.cancel();
+  resetPick(grid1); grid1.querySelectorAll('.card').forEach(c => c.classList.remove('speaking'));
 });
-
-/* ---------- 中文開關 ---------- */
-const zhBtn = document.getElementById('toggleZh');
-zhBtn.addEventListener('click', () => {
-  const hide = !document.querySelector('.zh').classList.contains('hidden');
-  document.querySelectorAll('.zh').forEach(el => el.classList.toggle('hidden', hide));
-  zhBtn.classList.toggle('on', !hide);
-  zhBtn.textContent = hide ? '🈶 中文：關' : '🈶 中文：開';
-});
-
-/* ---------- 抽一張 ---------- */
-function resetPick(){ [...grid.children].forEach(c => c.classList.remove('picked')); }
-document.getElementById('randomOne').addEventListener('click', () => {
-  resetPick();
+document.getElementById('ttsRandom').addEventListener('click', () => {
+  resetPick(grid1);
   const i = Math.floor(Math.random() * DATA.length);
-  const card = grid.children[i];
+  const card = grid1.children[i];
   card.classList.add('picked');
   card.scrollIntoView({behavior:'smooth', block:'center'});
-  say(card, DATA[i]);
+  sayTTS(card, DATA[i]);
 });
 
-/* ---------- 鍵盤 ---------- */
-document.addEventListener('keydown', (ev) => {
+/* ================= 2. 真人音檔 ================= */
+let audio = null, mp3Timer = null, mp3Index = -1;
+function ensureAudio(){
+  if (!audio){
+    audio = new Audio();
+    audio.preload = 'auto';
+  }
+  return audio;
+}
+function mp3Url(L){ return `${MP3_DIR}/${L}.mp3`; }
+
+function playMp3(card, d){
+  clearTimeout(mp3Timer);
+  try{ speechSynthesis.cancel(); }catch(e){}
+  const a = ensureAudio();
+  a.onended = a.onerror = null;
+  resetPick(grid2);
+  card.classList.add('picked','speaking');
+  setTimeout(() => card.classList.remove('speaking'), 600);
+  a.src = mp3Url(d.L);
+  a.onerror = () => {           // 線上沒有音檔 → 退回 TTS
+    speak(`${d.L}. ${d.L}. ${d.w}.`);
+  };
+  a.play().catch(() => speak(`${d.L}. ${d.L}. ${d.w}.`));
+  a.onended = () => card.classList.remove('picked');
+}
+
+document.getElementById('mp3All').addEventListener('click', () => {
+  const cards = [...grid2.children];
+  const a = ensureAudio();
+  mp3Index = 0;
+  const next = () => {
+    if (mp3Index >= cards.length){ resetPick(grid2); return; }
+    const card = cards[mp3Index], d = DATA[mp3Index];
+    resetPick(grid2);
+    card.classList.add('picked','speaking');
+    setTimeout(() => card.classList.remove('speaking'), 600);
+    card.scrollIntoView({behavior:'smooth', block:'center'});
+    a.onended = null; a.onerror = null;
+    a.src = mp3Url(d.L);
+    a.onerror = () => { speak(`${d.L}. ${d.L}. ${d.w}.`); mp3Timer = setTimeout(() => { mp3Index++; next(); }, 1600); };
+    a.onended = () => { mp3Timer = setTimeout(() => { mp3Index++; next(); }, 200); };
+    a.play().catch(() => { speak(`${d.L}. ${d.L}. ${d.w}.`); mp3Timer = setTimeout(() => { mp3Index++; next(); }, 1600); });
+  };
+  next();
+});
+document.getElementById('mp3Stop').addEventListener('click', () => {
+  clearTimeout(mp3Timer);
+  if (audio){ audio.onended = audio.onerror = null; audio.pause(); }
+  resetPick(grid2);
+  grid2.querySelectorAll('.card').forEach(c => c.classList.remove('speaking'));
+});
+document.getElementById('mp3Random').addEventListener('click', () => {
+  const i = Math.floor(Math.random() * DATA.length);
+  const card = grid2.children[i];
+  card.scrollIntoView({behavior:'smooth', block:'center'});
+  playMp3(card, DATA[i]);
+});
+
+/* ================= 中文開關（兩頁籤同步） ================= */
+const zhBtns = [document.getElementById('zhBtn1'), document.getElementById('zhBtn2')];
+let zhHidden = false;
+function applyZh(){
+  document.querySelectorAll('.zh').forEach(el => el.classList.toggle('hidden', zhHidden));
+  zhBtns.forEach(b => {
+    b.textContent = zhHidden ? '🈶 中文：關' : '🈶 中文：開';
+    b.classList.toggle('on', !zhHidden);
+  });
+}
+zhBtns.forEach(b => b.addEventListener('click', () => { zhHidden = !zhHidden; applyZh(); }));
+
+function resetPick(grid){ grid.querySelectorAll('.card').forEach(c => c.classList.remove('picked')); }
+
+/* ================= 鍵盤 ================= */
+document.addEventListener('keydown', ev => {
   const k = ev.key.toUpperCase();
   const i = DATA.findIndex(d => d.L === k);
   if (i > -1){
-    resetPick();
+    const grid = currentTab === '2' ? grid2 : (currentTab === '1' ? grid1 : null);
+    if (!grid) return;
     const card = grid.children[i];
-    card.classList.add('picked');
     card.scrollIntoView({behavior:'smooth', block:'center'});
-    say(card, DATA[i]);
+    if (currentTab === '2') playMp3(card, DATA[i]); else sayTTS(card, DATA[i]);
   }
-  if (ev.code === 'Space'){ ev.preventDefault(); playAllBtn.click(); }
+  if (ev.code === 'Space' && currentTab === '1'){ ev.preventDefault(); document.getElementById('ttsAll').click(); }
 });
+
+/* ================= 3. 四段影片 ================= */
+(function mountSegs(){
+  const grid = document.getElementById('vgrid');
+  grid.innerHTML = SEGS.map(s => ONLINE ? `
+      <div class="vcell">
+        <div class="vwrap">
+          <iframe src="https://www.youtube-nocookie.com/embed/${s.id}?rel=0"
+            title="字母韻文動畫 ${s.label}"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <p class="vcap">${s.label}</p>
+      </div>` : `
+      <div class="vcell">
+        <video controls playsinline preload="metadata" src="${s.file}"></video>
+        <p class="vcap">${s.label}</p>
+      </div>`).join('');
+})();
+
+/* ================= 4. 完整 A-Z 影片 ================= */
+(function mountFull(){
+  const wrap = document.getElementById('vfullWrap');
+  if (ONLINE){
+    wrap.innerHTML = `<div class="empty">完整 A–Z 影片（19.7 MB）屬教材內容，只放在本機，<br>沒有上傳到公開網站。<br><br>要線上看，請切到「🎬 四段韻文影片」（YouTube 內嵌）。</div>`;
+    return;
+  }
+  wrap.innerHTML = `<video controls playsinline preload="metadata" src="${FULL_VIDEO}"></video>`;
+  const v = wrap.querySelector('video');
+  v.addEventListener('error', () => {
+    wrap.innerHTML = `<div class="empty">找不到檔案：attachments/字母韻文_A-Z.mp4</div>`;
+  });
+})();
 </script>
 </body>
 </html>
